@@ -45,20 +45,31 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
-    tokens:[{
+    tokens: [{
         token: {
             type: String,
             required: true,
         }
     }]
 })
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject()
 
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+}
+
+// This methos helps hide private data from displaying to user.
+// This includes the user password and tokens.
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, 'thisismynewcourse')
 
-user.tokens = user.tokens.concat({ token })
-await user.save()
+    user.tokens = user.tokens.concat({ token })
+    await user.save()
 
     return token
 }
