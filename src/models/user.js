@@ -52,6 +52,17 @@ const userSchema = new mongoose.Schema({
         }
     }]
 })
+
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'author'
+})
+
+
+
+// This methos helps hide private data from displaying to user.
+// This includes the user password and tokens.
 userSchema.methods.toJSON = function () {
     const user = this
     const userObject = user.toObject()
@@ -62,8 +73,6 @@ userSchema.methods.toJSON = function () {
     return userObject
 }
 
-// This methos helps hide private data from displaying to user.
-// This includes the user password and tokens.
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, 'thisismynewcourse')
