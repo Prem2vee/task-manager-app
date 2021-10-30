@@ -18,6 +18,8 @@ const taskSchema = new mongoose.Schema({
         //  another model which in this case is the User model
         ref: 'User'
     }
+}, {
+    timestamps: true
 })
 
 
